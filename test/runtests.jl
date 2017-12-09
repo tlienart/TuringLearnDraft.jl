@@ -1,5 +1,3 @@
-using TuringLearnDraft
-using Base.Test
+using TuringLearnDraft, Base.Test
 
-# write your own tests here
-@test 1 == 2
+@testset "Linear Regression" begin include("_linear_regression.jl") end
