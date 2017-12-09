@@ -33,5 +33,3 @@ lrm_ridge = fit(lr_ridge, X, y)
 
 @test predict(lrm_noreg, X2) == X2*β_noreg
 @test predict(lrm_ridge, X2) == X2*β_ridge
-
-#lrm_lasso = firt(lr_lasso, X, y)
