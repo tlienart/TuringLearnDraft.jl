@@ -9,65 +9,52 @@ export
 ## Declaration and Model types
 
 mutable struct GeneralizedLinearRegression
-    loss::Loss
-    regularizer::Loss
-    regularizer_coef::AbstractFloat
+    loss::DistanceLoss  # L(y-ŷ)
+    penalty::Loss       # NOTE: the penalty contains the scaling
     fit_intercept::Bool
-    solver::String
 end
 
 struct GeneralizedLinearRegressionModel <: RegressionModel
     glr::GeneralizedLinearRegression
-    dim::Tuple{Int, Int}
-    intercept::AbstractFloat
-    coefs::AbstractArray{AbstractFloat}
+    n_features::Int
+    intercept::Number
+    coefs::AbstractVector{Number}
 end
 
 ### Constructors
 
 function GeneralizedLinearRegression(;
-    loss::Loss=L2Loss(),
-    regularizer::Loss=ZeroLoss(),
-    regularizer_coef::AbstractFloat=0.0,
-    fit_intercept::Bool=true,
-    solver::String="default")
+    loss=L2DistLoss(),
+    penalty=NoPenalty(),
+    fit_intercept=true)
 
     GeneralizedLinearRegression(
         loss,
-        regularizer,
-        regularizer_coef,
-        fit_intercept,
-        solver)
+        penalty,
+        fit_intercept)
 end
 
 function LinearRegression(;
-    fit_intercept::Bool=true,
-    solver::String="default")
+    fit_intercept::Bool=true)
+
     GeneralizedLinearRegression(
-        fit_intercept=fit_intercept,
-        solver=solver)
+        fit_intercept=fit_intercept)
 end
 
 function RidgeRegression(
-    λ::AbstractFloat=1.0;
-    fit_intercept::Bool=true,
-    solver::String="default")
+    λ::Number=1.0;
+    fit_intercept::Bool=true)
 
     GeneralizedLinearRegression(
-        regularizer=L2Loss(),
-        regularizer_coef=λ,
-        fit_intercept=fit_intercept,
-        solver=solver)
+        penalty=L2Penalty(λ),
+        fit_intercept=fit_intercept)
 end
 
 function LassoRegression(
-    λ::AbstractFloat=1.0;
-    fit_intercept::Bool=true,
-    solver::String="default")
+    λ::Number=1.0;
+    fit_intercept::Bool=true)
 
     GeneralizedLinearRegression(
-        regularizer=L1Loss(),
-        regularizer_coef=λ,
-        fit_intercept=fit_intercept,
-        solver=solver)
+        penalty=L1Penalty(λ),
+        fit_intercept=fit_intercept)
 end
