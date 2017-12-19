@@ -1,6 +1,6 @@
 function predict(
     glrm::GeneralizedLinearRegressionModel,
-    X::AbstractArray{T}) where T <: Number
+    X::AbstractMatrix{T}) where T <: Real
 
     if glrm.n_features != size(X, 2)
         throw(DimensionMismatch(
@@ -17,9 +17,9 @@ end
 
 function fit(
     glr::GeneralizedLinearRegression,
-    X::AbstractArray{T},
+    X::AbstractMatrix{T},
     y::AbstractVector{T},
-    solver::String="default") where T <: Number
+    solver::String="default") where T <: Real
 
     if size(X, 1) != length(y)
         throw(DimensionMismatch(
@@ -47,6 +47,9 @@ function fit(
         elseif glr.penalty isa L2Penalty
             λ = penalty_coef(glr.penalty)
             β = ridgefit(glr, X_, y, λ, solver)
+        elseif glr.penalty isa HuberPenalty
+            λ = penalty_coef(glr.penalty)
+            β = huberfit(glr, X_, y, λ, solver)
         else
             throw(UnimplementedException())
         end
@@ -84,6 +87,15 @@ end
 
 
 function lassofit(glr, X, y, λ, solver)
+    if solver == "default"
+        throw(UnimplementedException())
+    else
+        throw(UnimplementedException())
+    end
+end
+
+
+function huberfit(glr, X, y, λ, solver)
     if solver == "default"
         throw(UnimplementedException())
     else

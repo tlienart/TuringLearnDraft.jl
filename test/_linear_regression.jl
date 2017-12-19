@@ -20,6 +20,7 @@ lrm_ridge = fit(lr_ridge, X, y)
 
 β_noreg = hcat(ones(n), X) \ y
 β_ridge = (X'*X+λ*eye(p))\(X'*y)
+
 @test lrm_noreg.intercept == β_noreg[1]
 @test lrm_noreg.coefs == β_noreg[2:end]
 @test lrm_ridge.coefs == β_ridge

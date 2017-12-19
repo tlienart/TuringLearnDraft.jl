@@ -17,8 +17,8 @@ end
 struct GeneralizedLinearRegressionModel <: RegressionModel
     glr::GeneralizedLinearRegression
     n_features::Int
-    intercept::Number
-    coefs::AbstractVector{Number}
+    intercept::Real
+    coefs::AbstractVector{Real}
 end
 
 ### Constructors
@@ -42,7 +42,7 @@ function LinearRegression(;
 end
 
 function RidgeRegression(
-    λ::Number=1.0;
+    λ::Real=1.0;
     fit_intercept::Bool=true)
 
     GeneralizedLinearRegression(
@@ -51,10 +51,19 @@ function RidgeRegression(
 end
 
 function LassoRegression(
-    λ::Number=1.0;
+    λ::Real=1.0;
     fit_intercept::Bool=true)
 
     GeneralizedLinearRegression(
         penalty=L1Penalty(λ),
+        fit_intercept=fit_intercept)
+end
+
+function HuberRegression(
+    λ::Real=1.0,
+    fit_intercept::Bool=true)
+
+    GeneralizedLinearRegression(
+        loss=HuberPenalty(λ),
         fit_intercept=fit_intercept)
 end
